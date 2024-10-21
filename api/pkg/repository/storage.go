@@ -3,11 +3,12 @@ package repository
 import (
 	Telegram_Market "Telegram-Market"
 	"database/sql"
+	"github.com/segmentio/kafka-go"
 	"github.com/spf13/viper"
 )
 
 type User interface {
-	Create(userId int64) error
+	CreateUser(userId int64) error
 	GetUserById(userId int64) (Telegram_Market.Users, error)
 	GetUsers() ([]Telegram_Market.Users, error)
 	UpdateUser(userId int64, users Telegram_Market.Users) error
@@ -45,11 +46,11 @@ type Repository struct {
 	Wallets
 }
 
-func NewStorage(db *sql.DB) *Repository {
+func NewStorage(db *sql.DB, writer *kafka.Writer) *Repository {
 	return &Repository{
-		User:      NewUserTelegramSql(db),
-		Products:  NewProductTelegramSql(db),
-		Locations: NewLocationTelegramSql(db),
-		Wallets:   NewWalletsTelegramJson(viper.GetString("jsonpath")),
+		User:      NewUserTelegramSql(db, writer),
+		Products:  NewProductTelegramSql(db, writer),
+		Locations: NewLocationTelegramSql(db, writer),
+		Wallets:   NewWalletsTelegramJson(viper.GetString("jsonpath"), writer),
 	}
 }

@@ -21,7 +21,7 @@ func (h *Handler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	err = h.service.User.Create(userId)
+	err = h.service.User.CreateUser(userId)
 	if err != nil {
 		kafkaHandler.KafkaResponse(h.writer, er+err.Error(), op)
 		newErrorResponse(c, http.StatusInternalServerError, "invalid id param")

@@ -25,7 +25,7 @@ func main() {
 
 	db, err := repository.NewSqliteDB()
 
-	storageDB := repository.NewStorage(db)
+	storageDB := repository.NewStorage(db, writer)
 	services := service.NewService(storageDB)
 	handlerAPI := handler.NewHandler(services, writer)
 

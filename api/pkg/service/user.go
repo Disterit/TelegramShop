@@ -13,8 +13,8 @@ func NewUserTelegram(repo repository.User) *UserTelegram {
 	return &UserTelegram{repo: repo}
 }
 
-func (t *UserTelegram) Create(userId int64) error {
-	return t.repo.Create(userId)
+func (t *UserTelegram) CreateUser(userId int64) error {
+	return t.repo.CreateUser(userId)
 }
 
 func (t *UserTelegram) GetUserById(userId int64) (Telegram_Market.Users, error) {

@@ -2,20 +2,25 @@ package repository
 
 import (
 	Telegram_Market "Telegram-Market"
+	"Telegram-Market/api/pkg/repository/kafkaRepository"
 	"database/sql"
 	"fmt"
+	"github.com/segmentio/kafka-go"
 	"strings"
 )
 
 type ProductTelegramSql struct {
-	db *sql.DB
+	db     *sql.DB
+	writer *kafka.Writer
 }
 
-func NewProductTelegramSql(db *sql.DB) *ProductTelegramSql {
-	return &ProductTelegramSql{db: db}
+func NewProductTelegramSql(db *sql.DB, writer *kafka.Writer) *ProductTelegramSql {
+	return &ProductTelegramSql{db: db, writer: writer}
 }
 
 func (s *ProductTelegramSql) CreateProduct(product Telegram_Market.Products) (int64, error) {
+	const op = "api.pkg.repository.products.CreateProduct()"
+
 	query := fmt.Sprintf(`INSERT INTO %s (description, photo_url, price, quantity, location_city, location_coordinates, paid_flag) 
 									VALUES (?, ?, ?, ?, ?, ?, ?)`, TableProducts)
 
@@ -29,18 +34,22 @@ func (s *ProductTelegramSql) CreateProduct(product Telegram_Market.Products) (in
 		product.PaidFlag,
 	)
 	if err != nil {
+		kafkaRepository.KafkaResponse(s.writer, err.Error(), op)
 		return 0, fmt.Errorf("failed to insert product: %w", err)
 	}
 
 	id, err := res.LastInsertId()
 	if err != nil {
+		kafkaRepository.KafkaResponse(s.writer, err.Error(), op)
 		return 0, fmt.Errorf("failed to get last insert id: %w", err)
 	}
 
+	kafkaRepository.KafkaResponse(s.writer, "success", op)
 	return id, nil
 }
 
 func (s *ProductTelegramSql) GetProductById(productId int64) (Telegram_Market.Products, error) {
+	const op = "api.pkg.repository.products.GetProductById()"
 	var product Telegram_Market.Products
 
 	query := fmt.Sprintf(`SELECT 
@@ -49,7 +58,6 @@ func (s *ProductTelegramSql) GetProductById(productId int64) (Telegram_Market.Pr
 
 	row := s.db.QueryRow(query, productId)
 
-	// Считываем значения из строки в структуру `product`
 	err := row.Scan(
 		&product.Id,
 		&product.Description,
@@ -64,18 +72,24 @@ func (s *ProductTelegramSql) GetProductById(productId int64) (Telegram_Market.Pr
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			kafkaRepository.KafkaResponse(s.writer, err.Error(), op)
 			return product, fmt.Errorf("product with ID %d not found", productId)
 		}
+		kafkaRepository.KafkaResponse(s.writer, err.Error(), op)
 		return product, fmt.Errorf("failed to scan product: %w", err)
 	}
 
+	kafkaRepository.KafkaResponse(s.writer, "success", op)
 	return product, nil
 }
 
 func (s *ProductTelegramSql) GetAllProducts() ([]Telegram_Market.Products, error) {
+	const op = "api.pkg.repository.products.GetAllProducts()"
+
 	query := fmt.Sprintf("SELECT * FROM %s", TableProducts)
 	rows, err := s.db.Query(query)
 	if err != nil {
+		kafkaRepository.KafkaResponse(s.writer, err.Error(), op)
 		return nil, fmt.Errorf("failed to get products from database: %w", err)
 	}
 
@@ -95,25 +109,32 @@ func (s *ProductTelegramSql) GetAllProducts() ([]Telegram_Market.Products, error
 			&product.PaidFlag)
 
 		if err != nil {
+			kafkaRepository.KafkaResponse(s.writer, err.Error(), op)
 			return nil, fmt.Errorf("failed to get products from database: %w", err)
 		}
 		products = append(products, product)
 	}
 
+	kafkaRepository.KafkaResponse(s.writer, "success", op)
 	return products, nil
 }
 
 func (s *ProductTelegramSql) DeleteProduct(productId int64) error {
+	const op = "api.pkg.repository.products.DeleteProduct()"
+
 	query := fmt.Sprintf(`DELETE FROM %s WHERE id = ?`, TableProducts)
 	_, err := s.db.Exec(query, productId)
 	if err != nil {
+		kafkaRepository.KafkaResponse(s.writer, err.Error(), op)
 		return fmt.Errorf("failed to delete product from database: %w", err)
 	}
 
+	kafkaRepository.KafkaResponse(s.writer, "success", op)
 	return nil
 }
 
 func (s *ProductTelegramSql) UpdateProduct(productId int64, product Telegram_Market.UpdateProducts) error {
+	const op = "api.pkg.repository.products.UpdateProduct()"
 	setValues := make([]string, 0)
 	args := make([]interface{}, 0)
 	argId := 1
@@ -177,17 +198,24 @@ func (s *ProductTelegramSql) UpdateProduct(productId int64, product Telegram_Mar
 	args = append(args, productId)
 	_, err := s.db.Exec(query, args...)
 	if err != nil {
+		kafkaRepository.KafkaResponse(s.writer, err.Error(), op)
 		return fmt.Errorf("failed to update product from database: %w", err)
 	}
 
+	kafkaRepository.KafkaResponse(s.writer, "success", op)
 	return nil
 }
 
 func (s *LocationTelegramSql) DeleteLocation(locationId int64) error {
+	const op = "api.pkg.repository.locations.DeleteLocation()"
+
 	query := fmt.Sprintf(`DELETE FROM %s WHERE id = ?`, TableLocations)
 	_, err := s.db.Exec(query, locationId)
 	if err != nil {
+		kafkaRepository.KafkaResponse(s.write, err.Error(), op)
 		return fmt.Errorf("failed to delete location from database: %w", err)
 	}
+
+	kafkaRepository.KafkaResponse(s.write, "success", op)
 	return nil
 }

@@ -6,7 +6,7 @@ import (
 )
 
 type User interface {
-	Create(userId int64) error
+	CreateUser(userId int64) error
 	GetUserById(userId int64) (Telegram_Market.Users, error)
 	GetUsers() ([]Telegram_Market.Users, error)
 	UpdateUser(userId int64, users Telegram_Market.Users) error
