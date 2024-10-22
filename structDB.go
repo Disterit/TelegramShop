@@ -37,7 +37,7 @@ type Wallet struct {
 type UpdateProducts struct {
 	Description         *string  `json:"description"`
 	PhotoUrl            *string  `json:"photo_url"`
-	Price               *float32 `json:"price"`
+	Price               *float64 `json:"price"`
 	Quantity            *int64   `json:"quantity"`
 	LocationCity        *string  `json:"location_city"`
 	LocationCoordinates *string  `json:"location_coordinates"`
