@@ -1,6 +1,6 @@
 CREATE TABLE users (
                        id INTEGER PRIMARY KEY AUTOINCREMENT,  -- уникальный идентификатор записи, автоинкрементный
-                       user_id INTEGER NOT NULL, -- идентификатор пользователя Telegram
+                       user_id INTEGER UNIQUE NOT NULL, -- идентификатор пользователя Telegram
                        balance REAL NOT NULL DEFAULT 0.0 -- баланс пользователя
 );
 

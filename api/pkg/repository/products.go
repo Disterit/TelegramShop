@@ -44,7 +44,6 @@ func (s *ProductTelegramSql) CreateProduct(product Telegram_Market.Products) (in
 		return 0, fmt.Errorf("failed to get last insert id: %w", err)
 	}
 
-	kafkaRepository.KafkaResponse(s.writer, "success", op)
 	return id, nil
 }
 
@@ -79,7 +78,6 @@ func (s *ProductTelegramSql) GetProductById(productId int64) (Telegram_Market.Pr
 		return product, fmt.Errorf("failed to scan product: %w", err)
 	}
 
-	kafkaRepository.KafkaResponse(s.writer, "success", op)
 	return product, nil
 }
 
@@ -115,7 +113,6 @@ func (s *ProductTelegramSql) GetAllProducts() ([]Telegram_Market.Products, error
 		products = append(products, product)
 	}
 
-	kafkaRepository.KafkaResponse(s.writer, "success", op)
 	return products, nil
 }
 
@@ -129,7 +126,6 @@ func (s *ProductTelegramSql) DeleteProduct(productId int64) error {
 		return fmt.Errorf("failed to delete product from database: %w", err)
 	}
 
-	kafkaRepository.KafkaResponse(s.writer, "success", op)
 	return nil
 }
 
@@ -202,7 +198,6 @@ func (s *ProductTelegramSql) UpdateProduct(productId int64, product Telegram_Mar
 		return fmt.Errorf("failed to update product from database: %w", err)
 	}
 
-	kafkaRepository.KafkaResponse(s.writer, "success", op)
 	return nil
 }
 
@@ -216,6 +211,5 @@ func (s *LocationTelegramSql) DeleteLocation(locationId int64) error {
 		return fmt.Errorf("failed to delete location from database: %w", err)
 	}
 
-	kafkaRepository.KafkaResponse(s.write, "success", op)
 	return nil
 }

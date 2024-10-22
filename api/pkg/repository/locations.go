@@ -38,7 +38,6 @@ func (s *LocationTelegramSql) CreateLocation(location Telegram_Market.Locations)
 		return 0, fmt.Errorf("failed to get last insert id: %w", err)
 	}
 
-	kafkaRepository.KafkaResponse(s.write, "success", op)
 	return id, nil
 }
 
@@ -60,7 +59,6 @@ func (s *LocationTelegramSql) GetLocationById(locationId int64) (Telegram_Market
 		return location, err
 	}
 
-	kafkaRepository.KafkaResponse(s.write, "success", op)
 	return location, nil
 }
 
@@ -91,7 +89,6 @@ func (s *LocationTelegramSql) GetAllLocations() ([]Telegram_Market.Locations, er
 		locations = append(locations, location)
 	}
 
-	kafkaRepository.KafkaResponse(s.write, "success", op)
 	return locations, nil
 }
 
@@ -128,6 +125,5 @@ func (s *LocationTelegramSql) UpdateLocations(locationId int64, location Telegra
 		return fmt.Errorf("failed to update product from database: %w", err)
 	}
 
-	kafkaRepository.KafkaResponse(s.write, "success", op)
 	return nil
 }

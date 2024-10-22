@@ -27,7 +27,6 @@ func (s *UserTelegramSql) CreateUser(userId int64) error {
 		return err
 	}
 
-	kafkaRepository.KafkaResponse(s.writer, "success", op)
 	return nil
 }
 
@@ -35,7 +34,7 @@ func (s *UserTelegramSql) GetUserById(userId int64) (Telegram_Market.Users, erro
 	const op = "api.pkg.repository.user.GetUserById()"
 	var user Telegram_Market.Users
 
-	query := fmt.Sprintf("SELECT id, user_id, balance FROM %s WHERE id = ?", TableUsers)
+	query := fmt.Sprintf("SELECT id, user_id, balance FROM %s WHERE user_id = ?", TableUsers)
 	row := s.db.QueryRow(query, userId)
 
 	err := row.Scan(&user.Id, &user.UserId, &user.Balance)
@@ -48,7 +47,6 @@ func (s *UserTelegramSql) GetUserById(userId int64) (Telegram_Market.Users, erro
 		return user, fmt.Errorf("failed to scan user: %w", err)
 	}
 
-	kafkaRepository.KafkaResponse(s.writer, "success", op)
 	return user, nil
 }
 
@@ -73,7 +71,6 @@ func (s *UserTelegramSql) GetUsers() ([]Telegram_Market.Users, error) {
 		users = append(users, user)
 	}
 
-	kafkaRepository.KafkaResponse(s.writer, "success", op)
 	return users, nil
 }
 
@@ -88,7 +85,6 @@ func (s *UserTelegramSql) DeleteUser(userId int64) error {
 		return err
 	}
 
-	kafkaRepository.KafkaResponse(s.writer, "success", op)
 	return nil
 }
 
@@ -102,6 +98,5 @@ func (s *UserTelegramSql) UpdateUser(userId int64, users Telegram_Market.Users) 
 		return err
 	}
 
-	kafkaRepository.KafkaResponse(s.writer, "success", op)
 	return nil
 }

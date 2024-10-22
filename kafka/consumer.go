@@ -11,7 +11,7 @@ func main() {
 	// Создаем новый reader (консумер) для чтения сообщений из Kafka
 	reader := kafka.NewReader(kafka.ReaderConfig{
 		Brokers: []string{"localhost:29092"},
-		Topic:   "example-topic",
+		Topic:   "TelegramShop",
 		GroupID: "example-group",
 	})
 	defer reader.Close()

@@ -5,6 +5,8 @@ import (
 	"Telegram-Market/api/pkg/repository"
 )
 
+//go:generate mockgen -source=service.go -destination=mocks/mock.go
+
 type User interface {
 	CreateUser(userId int64) error
 	GetUserById(userId int64) (Telegram_Market.Users, error)

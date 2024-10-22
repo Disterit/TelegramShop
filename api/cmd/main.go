@@ -15,7 +15,7 @@ func main() {
 
 	writer := kafka.NewWriter(kafka.WriterConfig{
 		Brokers:  []string{"localhost:29092"},
-		Topic:    "example-topic",
+		Topic:    "TelegramShop",
 		Balancer: &kafka.LeastBytes{},
 	})
 

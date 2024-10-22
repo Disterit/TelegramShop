@@ -77,7 +77,6 @@ func (w *WalletsTelegramJson) CreateWallet(wallet Telegram_Market.Wallet) (int64
 		return 0, fmt.Errorf("error to wtiring JSON file: %v", err)
 	}
 
-	kafkaRepository.KafkaResponse(w.writer, "success", op)
 	return id, nil
 }
 
@@ -110,7 +109,6 @@ func (w *WalletsTelegramJson) GetAllWallets() ([]Telegram_Market.Wallet, error) 
 		return nil, fmt.Errorf("error to reading JSON file: %v", err)
 	}
 
-	kafkaRepository.KafkaResponse(w.writer, "success", op)
 	return wallets, nil
 }
 
@@ -125,7 +123,6 @@ func (w *WalletsTelegramJson) GetWalletById(id int64) (*Telegram_Market.Wallet, 
 
 	for _, wallet := range wallets {
 		if wallet.ID == id {
-			kafkaRepository.KafkaResponse(w.writer, "success", op)
 			return &wallet, nil
 		}
 	}
@@ -178,7 +175,6 @@ func (w *WalletsTelegramJson) DeleteWallet(WalletID int64) error {
 		return fmt.Errorf("error to wtiring JSON file: %v", err)
 	}
 
-	kafkaRepository.KafkaResponse(w.writer, "success", op)
 	return nil
 }
 
@@ -229,6 +225,5 @@ func (w *WalletsTelegramJson) UpdateWallet(walletID int64, Wallet Telegram_Marke
 		return fmt.Errorf("error to wtiring JSON file: %v", err)
 	}
 
-	kafkaRepository.KafkaResponse(w.writer, "success", op)
 	return nil
 }
