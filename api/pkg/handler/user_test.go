@@ -120,7 +120,7 @@ func TestHandler_GetUserById(t *testing.T) {
 
 			r.ServeHTTP(w, req)
 
-			assert.Equal(t, testCase.expectedStatusCode, 200)
+			assert.Equal(t, testCase.expectedStatusCode, w.Code)
 			assert.Equal(t, testCase.expectedRequestBody, w.Body.String())
 		})
 	}
@@ -176,7 +176,7 @@ func TestHandler_UpdateUser(t *testing.T) {
 
 			r.ServeHTTP(w, req)
 
-			assert.Equal(t, testCase.expectedStatusCode, 200)
+			assert.Equal(t, testCase.expectedStatusCode, w.Code)
 			assert.Equal(t, testCase.expectedRequestBody, w.Body.String())
 		})
 	}
@@ -227,7 +227,7 @@ func TestHandler_DeleteUser(t *testing.T) {
 
 		r.ServeHTTP(w, req)
 
-		assert.Equal(t, testCase.expectedStatusCode, 200)
+		assert.Equal(t, testCase.expectedStatusCode, w.Code)
 		assert.Equal(t, testCase.expectedRequestBody, w.Body.String())
 	}
 }
