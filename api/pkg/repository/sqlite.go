@@ -31,7 +31,7 @@ func NewSqliteDB() (*sql.DB, error) {
 
 	db, err := sql.Open("sqlite3", "./db/telegram.db")
 	if err != nil {
-		return nil, fmt.Errorf("%s: %w", err)
+		return nil, fmt.Errorf("%w:", err)
 	}
 
 	return db, nil
